@@ -40,9 +40,9 @@
         const purchaseRows = document.querySelectorAll('.purchase-row');
 
         purchaseRows.forEach((row) => {
-          const person = row.querySelector('input[name=person]').value;
+          const person = row.querySelector('input[name=person]').value.toLowerCase();
           const cost = parseInt(row.querySelector('input[name=cost]').value);
-          const people = row.querySelector('input[name=people]').value.split(',').map(p => p.trim());
+          const people = row.querySelector('input[name=people]').value.split(',').map(p => p.trim().toLowerCase());
 
           purchases.push({ person, cost, people });
         });
@@ -58,7 +58,7 @@
           const costPerPerson = cost / totalPeople;
 
           people.forEach((p) => {
-            if (p.trim() !== person) {
+            if (p.trim().toLowerCase() !== person) {
               if (debt[p]) {
                 debt[p].push({ to: person, amount: costPerPerson });
               } else {
@@ -72,7 +72,7 @@
         for (let p in debt) {
           result.innerHTML += `<h3>${p} owes:</h3>`;
           debt[p].forEach((d) => {
-            result.innerHTML += `${d.amount.toFixed(2)} to ${d.to}.<br/>`;
+            result.innerHTML += `${Math.round(d.amount)} to ${d.to}.<br/>`;
           });
         }
       });
