@@ -7,14 +7,22 @@
   <body>
     <h1>Gift Splitter</h1>
     <form>
-      <label for="person">Person who made the purchase:</label>
-      <input type="text" name="person" required /><br />
-
-      <label for="cost">Cost of present:</label>
-      <input type="number" name="cost" required /><br />
-
-      <label for="people">People the cost is being split among:</label>
-      <input type="text" name="people" required /><br />
+      <label for="purchases">Purchases:</label><br />
+      <div class="purchase-row">
+        <input type="text" name="person" placeholder="Person" required />
+        <input type="number" name="cost" placeholder="Cost" required />
+        <input type="text" name="people" placeholder="Split among (comma-separated)" required />
+      </div>
+      <div class="purchase-row">
+        <input type="text" name="person" placeholder="Person" required />
+        <input type="number" name="cost" placeholder="Cost" required />
+        <input type="text" name="people" placeholder="Split among (comma-separated)" required />
+      </div>
+      <div class="purchase-row">
+        <input type="text" name="person" placeholder="Person" required />
+        <input type="number" name="cost" placeholder="Cost" required />
+        <input type="text" name="people" placeholder="Split among (comma-separated)" required />
+      </div>
 
       <input type="submit" value="Calculate" />
     </form>
@@ -28,26 +36,49 @@
       form.addEventListener('submit', (event) => {
         event.preventDefault();
 
-        const person = form.person.value;
-        const cost = parseInt(form.cost.value);
-        const people = form.people.value.split(',');
+        const purchases = [];
+        const purchaseRows = document.querySelectorAll('.purchase-row');
 
-        const totalPeople = people.length;
-        const costPerPerson = cost / totalPeople;
+        purchaseRows.forEach((row) => {
+          const person = row.querySelector('input[name=person]').value;
+          const cost = parseInt(row.querySelector('input[name=cost]').value);
+          const people = row.querySelector('input[name=people]').value.split(',').map(p => p.trim());
 
-        let debt = {};
+          purchases.push({ person, cost, people });
+        });
 
-        people.forEach((p) => {
-          if (p.trim() !== person) {
-            debt[p] = costPerPerson;
-          }
+        const debt = {};
+
+        purchases.forEach((purchase) => {
+          const person = purchase.person;
+          const cost = purchase.cost;
+          const people = purchase.people;
+
+          const totalPeople = people.length;
+          const costPerPerson = cost / totalPeople;
+
+          people.forEach((p) => {
+            if (p.trim() !== person) {
+              if (debt[p]) {
+                debt[p] += costPerPerson;
+              } else {
+                debt[p] = costPerPerson;
+              }
+            }
+          });
         });
 
         result.innerHTML = `<h2>Owing Details</h2>`;
         for (let p in debt) {
-          result.innerHTML += `${p} owes ${debt[p]} to ${person}.<br/>`;
+          result.innerHTML += `${p} owes ${debt[p].toFixed(2)} to others.<br/>`;
         }
       });
     </script>
+
+    <style>
+      .purchase-row {
+        margin-bottom: 10px;
+      }
+    </style>
   </body>
 </html>
