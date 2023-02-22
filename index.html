@@ -60,9 +60,9 @@
           people.forEach((p) => {
             if (p.trim() !== person) {
               if (debt[p]) {
-                debt[p] += costPerPerson;
+                debt[p].push({ to: person, amount: costPerPerson });
               } else {
-                debt[p] = costPerPerson;
+                debt[p] = [{ to: person, amount: costPerPerson }];
               }
             }
           });
@@ -70,7 +70,10 @@
 
         result.innerHTML = `<h2>Owing Details</h2>`;
         for (let p in debt) {
-          result.innerHTML += `${p} owes ${debt[p].toFixed(2)} to others.<br/>`;
+          result.innerHTML += `<h3>${p} owes:</h3>`;
+          debt[p].forEach((d) => {
+            result.innerHTML += `${d.amount.toFixed(2)} to ${d.to}.<br/>`;
+          });
         }
       });
     </script>
