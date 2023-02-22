@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gift Splitter</title>
+  </head>
+  <body>
+    <h1>Gift Splitter</h1>
+    <form>
+      <label for="person">Person who made the purchase:</label>
+      <input type="text" name="person" required /><br />
+
+      <label for="cost">Cost of present:</label>
+      <input type="number" name="cost" required /><br />
+
+      <label for="people">People the cost is being split among:</label>
+      <input type="text" name="people" required /><br />
+
+      <input type="submit" value="Calculate" />
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+      const form = document.querySelector('form');
+      const result = document.querySelector('#result');
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const person = form.person.value;
+        const cost = parseInt(form.cost.value);
+        const people = form.people.value.split(',');
+
+        const totalPeople = people.length;
+        const costPerPerson = cost / totalPeople;
+
+        let debt = {};
+
+        people.forEach((p) => {
+          if (p.trim() !== person) {
+            debt[p] = costPerPerson;
+          }
+        });
+
+        result.innerHTML = `<h2>Owing Details</h2>`;
+        for (let p in debt) {
+          result.innerHTML += `${p} owes ${debt[p]} to ${person}.<br/>`;
+        }
+      });
+    </script>
+  </body>
+</html>
