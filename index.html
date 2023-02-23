@@ -58,7 +58,7 @@
           const costPerPerson = cost / totalPeople;
 
           people.forEach((p) => {
-            if (p.trim().toLowerCase() !== person) {
+            if (p !== person) {
               if (debt[p]) {
                 debt[p].push({ to: person, amount: costPerPerson });
               } else {
